@@ -15,7 +15,7 @@ app.use(cors())
 
 //  use solar-system
 //  db.createUser({user: "mongoadmin", pwd: "mongo-password", roles: [{ role: "readWrite", db: "config" },"clusterAdmin"]})
-mongoose.connect("process.env.MONGO_URI", {
+mongoose.connect( process.env.MONGO_URI, {
     user: process.env.MONGO_USERNAME,
     pass: process.env.MONGO_PASSWORD,
     useNewUrlParser: true,

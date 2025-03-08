@@ -5,6 +5,10 @@ pipeline {
         nodejs 'nodejs-20-14-0'
     }
 
+    environment {
+        MONGO_URI = "mongodb://54.162.38.232"
+    }
+
     stages {
         stage('Version') {
             steps {
@@ -26,7 +30,11 @@ pipeline {
         }
         stage('Unit Test') {
             steps {
-                sh 'npm test'
+                withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+                    echo "MONGO_USERNAME: ${MONGO_USERNAME}"
+                    echo "MONGO_PASSWORD: ${MONGO_PASSWORD}"
+                    sh 'npm test'
+                }
             }
         }
     }
