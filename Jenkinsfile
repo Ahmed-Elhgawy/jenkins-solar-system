@@ -32,10 +32,10 @@ pipeline {
                 }
                 stage('OWASP Dependency Check') {
                     steps {
-                        withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
-                            sh 'mvn org.owasp:dependency-check-maven:9.0.0:purge'
-                            dependencyCheck additionalArguments: "--scan \'./\'  --out \'./\' --format \'ALL\' --prettyPrint", odcInstallation: 'OWASP-DepCheck'
-                        }
+                        // withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
+                        sh 'mvn org.owasp:dependency-check-maven:9.0.0:purge'
+                        dependencyCheck additionalArguments: "--scan \'./\'  --out \'./\' --format \'ALL\' --prettyPrint", odcInstallation: 'OWASP-DepCheck'
+                        // }
 
                         // dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml'
 
