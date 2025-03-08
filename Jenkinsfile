@@ -57,11 +57,18 @@ pipeline {
             options { retry(2) }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-                    echo "MONGO_USERNAME: ${MONGO_USERNAME}"
-                    echo "MONGO_PASSWORD: ${MONGO_PASSWORD}"
                     sh 'npm test'
                 }
                 junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
+            }
+        }
+        stage('Code Coverage') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
+                    sh 'npm run coverage'
+                }
+
+                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             }
         }
     }
