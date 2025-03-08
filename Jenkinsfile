@@ -7,6 +7,8 @@ pipeline {
 
     environment {
         MONGO_URI = "mongodb://54.162.38.232"
+        MONGO_USERNAME = credentials('mongodb-user')
+        MONGO_PASSWORD = credentials('mongodb-secret')
     }
 
     options {
@@ -56,22 +58,24 @@ pipeline {
         stage('Unit Test') {
             options { retry(2) }
             steps {
-                withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-                    sh 'npm test'
-                }
-                junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
+                sh 'npm test'
             }
         }
         stage('Code Coverage') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
-                    catchError(buildResult: 'SUCCESS', message: 'The Error will be fixed in the future', stageResult: 'UNSTABLE') {
-                        sh 'npm run coverage'
-                    }
+                catchError(buildResult: 'SUCCESS', message: 'The Error will be fixed in the future', stageResult: 'UNSTABLE') {
+                    sh 'npm run coverage'
                 }
-
-                publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
             }
         }
     }
+
+    post {
+        always {
+            junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
+
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+        }
+    }
+    
 }
