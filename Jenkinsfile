@@ -33,7 +33,7 @@ pipeline {
                 stage('OWASP Dependency Check') {
                     steps {
                         withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
-                            dependencyCheck additionalArguments: "--scan \'./\'  --out \'./\' --format \'ALL\' --prettyPrint --nvdApiKey $NVD_API_KEY --disableCvssV4", odcInstallation: 'OWASP-DepCheck'
+                            dependencyCheck additionalArguments: "--scan \'./\'  --out \'./\' --format \'ALL\' --prettyPrint --nvdApiKey $NVD_API_KEY", odcInstallation: 'OWASP-DepCheck'
                         }
 
                         dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml'
