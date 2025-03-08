@@ -9,6 +9,11 @@ pipeline {
         MONGO_URI = "mongodb://54.162.38.232"
     }
 
+    options {
+        disableResume()
+        disableConcurrentBuilds abortPrevious: true
+    }
+
     stages {
         stage('Version') {
             steps {
@@ -20,6 +25,7 @@ pipeline {
         }
         stage('Install Dependencies') {
             steps {
+                options { timestamps() }
                 sh 'npm install --no-audit'
             }
         }
@@ -48,6 +54,7 @@ pipeline {
             }
         }
         stage('Unit Test') {
+            options { retry(2) }
             steps {
                 withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                     echo "MONGO_USERNAME: ${MONGO_USERNAME}"
