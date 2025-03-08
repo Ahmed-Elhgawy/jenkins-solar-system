@@ -35,7 +35,7 @@ pipeline {
                         dependencyCheck additionalArguments: '''
                             --scan \'./\' 
                             --out \'./\'
-                            --format \'All\'
+                            --format \'ALL\'
                             --prettyPrint''', odcInstallation: 'OWASP-DepCheck'
                     }
                 }
