@@ -33,6 +33,7 @@ pipeline {
                 stage('OWASP Dependency Check') {
                     steps {
                         withCredentials([string(credentialsId: 'nvd-api-key', variable: 'NVD_API_KEY')]) {
+                            sh 'mvn org.owasp:dependency-check-maven:9.0.0:purge'
                             dependencyCheck additionalArguments: "--scan \'./\'  --out \'./\' --format \'ALL\' --prettyPrint --nvdApiKey $NVD_API_KEY", odcInstallation: 'OWASP-DepCheck'
                         }
 
