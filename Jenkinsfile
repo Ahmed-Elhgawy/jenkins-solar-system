@@ -32,11 +32,15 @@ pipeline {
                 }
                 stage('OWASP Dependency Check') {
                     steps {
-                        dependencyCheck additionalArguments: '''
-                            --scan \'./\' 
-                            --out \'./\'
-                            --format \'ALL\'
-                            --prettyPrint''', odcInstallation: 'OWASP-DepCheck'
+                        withCredentials([string(credentialsId: '', variable: 'NVD_API_KEY')]) {
+                            dependencyCheck additionalArguments: "--scan \'./\'  --out \'./\' --format \'ALL\' --prettyPrint --nvdApiKey $NVD_API_KEY --disableCvssV4", odcInstallation: 'OWASP-DepCheck'
+                        }
+
+                        dependencyCheckPublisher failedTotalCritical: 1, pattern: 'dependency-check-report.xml'
+
+                        publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'dependency-check-jenkins.html', reportName: 'Dependency Check HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+
+                        junit allowEmptyResults: true, keepProperties: true, testResults: 'dependency-check-junit.xml'
                     }
                 }
             }
