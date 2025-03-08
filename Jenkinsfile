@@ -54,6 +54,7 @@ pipeline {
                     echo "MONGO_PASSWORD: ${MONGO_PASSWORD}"
                     sh 'npm test'
                 }
+                junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
             }
         }
     }
