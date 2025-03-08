@@ -13,9 +13,6 @@
     "check-coverage": true,
     "lines": 90
   },
-  "mocha": {
-    "reporter": "mocha-junit-reporter"
-  },
   "dependencies": {
     "@babel/traverse": "^7.23.2",
     "cors": "^2.8.5",

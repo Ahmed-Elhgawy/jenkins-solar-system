@@ -33,7 +33,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'mongo-credentials', passwordVariable: 'MONGO_PASSWORD', usernameVariable: 'MONGO_USERNAME')]) {
                     echo "MONGO_USERNAME: ${MONGO_USERNAME}"
                     echo "MONGO_PASSWORD: ${MONGO_PASSWORD}"
-                    sh 'npm test'
+                    sh 'npm test -- --reporter spec'
                 }
             }
         }
