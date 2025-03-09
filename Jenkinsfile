@@ -128,7 +128,7 @@ pipeline {
                 }
             }
         }
-        stage('Docker Image Build') {
+        stage('Docker Image PUSH') {
             steps {
                 withDockerRegistry(credentialsId: 'dockerhub') {
                     sh "docker push elhgawy/solar-system-app:$GIT_COMMIT "
