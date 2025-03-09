@@ -143,7 +143,7 @@ pipeline {
                 script {
                    sshagent(['ahmed-keyPair']) {
                         sh '''
-                            ssh -o StrictHostKeyChecking=no ec2@54.167.96.73 "
+                            ssh -o StrictHostKeyChecking=no ec2-user@54.167.96.73 "
                                 if sudo docker ps | grep -q "solar-system"; then
                                     echo "Container is running"
                                     sudo docker stop solar-system && sudo docker rm solar-system
