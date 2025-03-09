@@ -153,7 +153,8 @@ pipeline {
                                     -e MONGO_URI=$MONGO_URI \
                                     -e MONGO_USERNAME=$MONGO_USERNAME \
                                     -e MONGO_PASSWORD=$MONGO_PASSWORD \
-                                    -p 5000:5000 elhgawy/solar-system-app:$GIT_COMMIT    
+                                    -p 5000:5000 elhgawy/solar-system-app:$GIT_COMMIT
+                            "
                         '''
                     } 
                 }
