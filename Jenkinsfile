@@ -90,6 +90,44 @@ pipeline {
                 sh "docker build -t elhgawy/solar-system-app:$GIT_COMMIT ."
             }
         }
+        stage('Trivy vulnerability scan') {
+            steps {
+                sh '''
+                    trivy image elhgawy/solar-system-app:$GIT_COMMIT \
+                        --severity LOW,MEDIUM,HIGH \
+                        --exit-code 0 \
+                        --quiet \
+                        --format json -o trivy-image-HIGH-report.json
+
+                    trivy image elhgawy/solar-system-app:$GIT_COMMIT \
+                        --severity CRITICAL \
+                        --exit-code 0 \
+                        --quiet \
+                        --format json -o trivy-image-CRITICAL-report.json
+                '''
+            }
+            post {
+                always {
+                    sh '''
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                            --output trivy-image-HIGH-report.html trivy-image-HIGH-report.json
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/html.tpl" \
+                            --output trivy-image-CRITICAL-report.html trivy-image-CRITICAL-report.json
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
+                            --output trivy-image-HIGH-report.xml trivy-image-HIGH-report.json
+
+                        trivy convert \
+                            --format template --template "@/usr/local/share/trivy/templates/junit.tpl" \
+                            --output trivy-image-CRITICAL-report.xml trivy-image-CRITICAL-report.json
+                    '''
+                }
+            }
+        }
     }
 
     post {
