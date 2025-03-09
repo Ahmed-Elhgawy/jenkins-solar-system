@@ -142,8 +142,13 @@ pipeline {
             steps {
                 script {
                    sshagent(['ahmed-keyPair']) {
+                        withAWS(credentials: 'aws-jenkins-creds',region: 'us-east-1') {
+                            sh '''
+                                URL=$(aws ec2 describe-instances | jq -r '.Reservations[].Instances[] | select(.Tags[].Value == "Docker server") | .PublicDnsName')
+                            '''
+                        }
                         sh '''
-                            ssh -o StrictHostKeyChecking=no ec2-user@54.167.96.73 "
+                            ssh -o StrictHostKeyChecking=no ec2-user@$URL "
                                 if sudo docker ps | grep -q "solar-system"; then
                                     echo "Container is running"
                                     sudo docker stop solar-system && sudo docker rm solar-system
