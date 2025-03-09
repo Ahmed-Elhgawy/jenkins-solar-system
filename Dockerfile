@@ -8,9 +8,9 @@ RUN npm install
 
 COPY . .
 
-ENV MONGO_URI=mongodb://54.162.38.232
-ENV MONGO_USERNAME=mongoadmin
-ENV MONGO_PASSWORD=mongo-password
+ENV MONGO_URI=uriPlaceholder
+ENV MONGO_USERNAME=usernamePlaceholder
+ENV MONGO_PASSWORD=passwordPlaceholder
 
 EXPOSE 5000
 

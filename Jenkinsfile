@@ -135,6 +135,30 @@ pipeline {
                 }
             }
         }
+        stage('Deploy - AWS EC2') {
+            when {
+               branch 'feature/*'
+            }
+            steps {
+                script {
+                   sshagent(['ahmed-keyPair']) {
+                        sh '''
+                            ssh -o StrictHostKeyChecking=no ec2@54.167.96.73 "
+                                if sudo docker ps | grep -q "solar-system"; then
+                                    echo "Container is running"
+                                    sudo docker stop solar-system && sudo docker rm solar-system
+                                    echo "Container is stopped"
+                                fi
+                                sudo docker run --name solar-system -d \
+                                    -e MONGO_URI=$MONGO_URI \
+                                    -e MONGO_USERNAME=$MONGO_USERNAME \
+                                    -e MONGO_PASSWORD=$MONGO_PASSWORD \
+                                    -p 5000:5000 elhgawy/solar-system-app:$GIT_COMMIT    
+                        '''
+                    } 
+                }
+            }
+        }
     }
 
     post {
