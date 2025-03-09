@@ -87,7 +87,7 @@ pipeline {
         stage('Docker Image Build') {
             steps {
                 sh 'printenv'
-                sh "docker build -t elhgawy/solar-system-app:$BUILD_ID ."
+                sh "docker build -t elhgawy/solar-system-app:$GIT_COMMIT ."
             }
         }
     }
