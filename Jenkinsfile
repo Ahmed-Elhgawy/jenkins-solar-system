@@ -163,6 +163,16 @@ pipeline {
                 }
             }
         }
+        stage('Integration Testing') {
+            when {
+               branch 'feature/*'
+            }
+            steps {
+                withAWS(credentials: 'aws-jenkins-creds',region: 'us-east-1') {
+                    sh "bash integration-testing-ec2.sh"
+                }
+            }
+        }
     }
 
     post {
