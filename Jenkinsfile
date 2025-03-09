@@ -128,6 +128,13 @@ pipeline {
                 }
             }
         }
+        stage('Docker Image Build') {
+            steps {
+                withDockerRegistry(credentialsId: 'dockerhub') {
+                    sh "docker push elhgawy/solar-system-app:$GIT_COMMIT "
+                }
+            }
+        }
     }
 
     post {
@@ -136,11 +143,11 @@ pipeline {
 
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
 
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-image-HIGH-report.html', reportName: 'Trivy Scan HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-report.html', reportName: 'Trivy Scan HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-image-HIGH-report.html', reportName: 'Trivy Scan HIGH Report', reportTitles: '', useWrapperFileDirectly: true])
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-report.html', reportName: 'Trivy Scan CRITICAL Report', reportTitles: '', useWrapperFileDirectly: true])
             junit allowEmptyResults: true, keepProperties: true, testResults: 'trivy-image-HIGH-report.xml'
             junit allowEmptyResults: true, keepProperties: true, testResults: 'trivy-image-CRITICAL-report.xml'
         }
     }
 
-}
+}   
