@@ -83,12 +83,12 @@ pipeline {
         }
     }
 
-    post {
-        always {
-            junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
+    // post {
+    //     always {
+    //         junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
 
-            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-        }
-    }
+    //         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+    //     }
+    // }
 
 }
