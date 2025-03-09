@@ -9,7 +9,7 @@ pipeline {
         MONGO_URI = "mongodb://54.162.38.232"
         MONGO_USERNAME = credentials('mongodb-user')
         MONGO_PASSWORD = credentials('mongodb-secret')
-        SONARQUBE_HOME = tools('sonarqube-scanner')
+        SONARQUBE_HOME = tool 'sonarqube-scanner' ;
     }
 
     options {
@@ -83,12 +83,12 @@ pipeline {
         }
     }
 
-    // post {
-    //     always {
-    //         junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
+    post {
+        always {
+            junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
 
-    //         publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
-    //     }
-    // }
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
+        }
+    }
 
 }
