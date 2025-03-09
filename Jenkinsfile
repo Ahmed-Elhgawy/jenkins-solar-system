@@ -9,6 +9,7 @@ pipeline {
         MONGO_URI = "mongodb://54.162.38.232"
         MONGO_USERNAME = credentials('mongodb-user')
         MONGO_PASSWORD = credentials('mongodb-secret')
+        SONARQUBE_HOME = tools('sonarqube-scanner')
     }
 
     options {
@@ -68,6 +69,19 @@ pipeline {
                 }
             }
         }
+        stage('SAST - SonarQube') {
+                steps {
+                    sh '''
+                        $SONARQUBE_HOME/bin/sonar-scanner \
+                            -Dsonar.projectKey=solar-system \
+                            -Dsonar.sources=app.js \
+                            -Dsonar.host.url=http://74.235.244.254:9000 \
+                            -Dsonar.javascript.lcov.reportPaths=./coverage/lcov.info \
+                            -Dsonar.token=sqp_b6b644de4e489265d92433149b8a34de0af4c1bd
+                    '''
+                }
+            }
+        }
     }
 
     post {
@@ -77,5 +91,5 @@ pipeline {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
         }
     }
-    
+
 }
