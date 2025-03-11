@@ -267,6 +267,16 @@ pipeline {
                 }
             }
         }
+        stage('Applyed to Production..!') {
+            when {
+               branch 'main'
+            }
+            steps {
+                timeout(time: 1, unit: 'DAYS') {
+                    input message: 'Applyed to Production', ok: 'YES! Let us go to Production', submitter: 'admin'
+                }
+            }
+        }
     }
 
     post {
