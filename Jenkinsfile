@@ -226,7 +226,7 @@ pipeline {
             steps {
                 timeout(time: 1, unit: 'DAYS') {
                     input {
-                        message 'Is The Application is Synced'
+                        message 'Is The Application is Synced',
                         ok 'YES! App is Synced'
                     }
                 }
