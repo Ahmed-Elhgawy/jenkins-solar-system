@@ -183,7 +183,7 @@ pipeline {
                 dir('solar-system-gitops-argocd/kubernetes') {
                     sh '''
                         git branch -m feature/$BUILD_NUMBER
-                        git checkout -b feature/$BUILD_NUMBER
+                        git checkout feature/$BUILD_NUMBER
                         sed -i "s|elhgawy/solar-system-app:.*|elhgawy/solar-system-app:$GIT_COMMIT|g" deployment.yml
 
                         git config --global user.email "jenkins@my-organiztion"
