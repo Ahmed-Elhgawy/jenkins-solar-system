@@ -179,11 +179,6 @@ pipeline {
                branch 'PR*'
             }
             steps {
-                script {
-                    if(fileExists('solar-system-gitops-argocd')) {
-                        sh "rm -rf 'solar-system-gitops-argocd'"
-                    }
-                }
                 sh "git clone http://4.227.216.46:3000/my-organization/solar-system-gitops-argocd.git"
                 dir('solar-system-gitops-argocd/kubernetes') {
                     sh '''
@@ -252,6 +247,21 @@ pipeline {
                 '''
             }
         }
+        stage('Upload - AWS S3') {
+            when {
+               branch 'PR*'
+            }
+            steps {
+                sh '''
+                    mkdir reports-$BUILD_NUMBER
+                    cp -rf coverage/ reports-$BUILD_NUMBER/
+                    cp test-results.xml trivy-image-*.* zap-report.* reports-$BUILD_NUMBER/
+                '''
+                withAWS(credentials: 'aws-jenkins-creds',region: 'us-east-1') {
+                    s3Upload(file:"reports-$BUILD_NUMBER", bucket:'solar-system-bucket', path:"jenkins-$BUILD_NUMBER/")
+                }
+            }
+        }
     }
 
     post {
@@ -276,4 +286,4 @@ pipeline {
         }
     }
 
-}   
+}
