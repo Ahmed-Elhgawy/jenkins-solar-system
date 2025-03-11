@@ -219,6 +219,36 @@ pipeline {
                 """
             }
         }
+        stage('APP is Synced..!') {
+            when {
+               branch 'PR*'
+            }
+            steps {
+                timeout(time: 1, unit: 'DAYS') {
+                    input {
+                        message 'Is The Application is Synced'
+                        ok 'YES! App is Synced'
+                    }
+                }
+            }
+        }
+        stage('DASP - OWASP ZAP') {
+            when {
+               branch 'PR*'
+            }
+            steps {
+                sh '''
+                    chmod 777 $(pwd)
+                    docker run --rm -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy zap-api-scan.py \
+                        -t http://172.203.129.56:30000/api-docs/ \
+                        -f openapi \
+                        -r zap-report.html \
+                        -w zap-report.md \
+                        -x zap-report.xml \
+                        -J zap-report.json
+                '''
+            }
+        }
     }
 
     post {
