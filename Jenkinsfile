@@ -195,6 +195,30 @@ pipeline {
                 }
             }
         }
+        stage('K8S - Raise PR') {
+            when {
+               branch 'PR*'
+            }
+            steps {
+                sh """
+                    curl -X 'POST' \
+                    'http://4.227.216.46:3000/api/v1/repos/my-organization/solar-system-gitops-argocd/pulls' \
+                    -H 'accept: application/json' \
+                    -H 'X-GITEA-OTP: $GITEA_TOKEN' \
+                    -H 'Content-Type: application/json' \
+                    -d '{
+                    "assignee": "git-admin",
+                    "assignees": [
+                        "git-admin"
+                    ],
+                    "base": "main",
+                    "body": "update Image in deployment manifest",
+                    "head": "feature/$BUILD_NUMBER",
+                    "title": "Update Docker image"
+                    }'
+                """
+            }
+        }
     }
 
     post {
