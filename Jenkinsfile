@@ -9,6 +9,7 @@ pipeline {
         MONGO_URI = "mongodb://54.162.38.232"
         MONGO_USERNAME = credentials('mongodb-user')
         MONGO_PASSWORD = credentials('mongodb-secret')
+        GITEA_TOKEN = credentials('gitea-api-token')
         SONARQUBE_HOME = tool 'sonarqube-scanner' ;
     }
 
@@ -173,10 +174,37 @@ pipeline {
                 }
             }
         }
+        stage('K8S - Update Image Tag') {
+            when {
+               branch 'PR*'
+            }
+            steps {
+                sh "git clone http://4.227.216.46:3000/my-organization/solar-system-gitops-argocd.git"
+                dir('solar-system-gitops-argocd/kubernetes') {
+                    sh '''
+                        git branch -m feature/$BUILD_NUMBER
+                        git checkout -b feature/$BUILD_NUMBER
+                        sed -i "s|elhgawy/solar-system-app:.*|elhgawy/solar-system-app:$GIT_COMMIT|g" deployment.yml
+
+                        git config --global user.email "jenkins@my-organiztion"
+                        git remote set-url origin http://$GITEA_TOKEN@4.227.216.46/my-organization/solar-system-gitops-argocd.git
+                        git add .
+                        git commit -m "Update image tag"
+                        git push -u origin feature/$BUILD_NUMBER
+                    '''
+                }
+            }
+        }
     }
 
     post {
         always {
+            script {
+                if(fileExists('solar-system-gitops-argocd')) {
+                    sh "rm -rf 'solar-system-gitops-argocd'"
+                }
+            }
+            
             junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
 
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
