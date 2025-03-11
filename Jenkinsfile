@@ -242,7 +242,8 @@ pipeline {
                         -r zap-report.html \
                         -w zap-report.md \
                         -x zap-report.xml \
-                        -J zap-report.json
+                        -J zap-report.json \
+                        -c zap-ignore
                 '''
             }
         }
@@ -264,6 +265,9 @@ pipeline {
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'trivy-image-CRITICAL-report.html', reportName: 'Trivy Scan CRITICAL Report', reportTitles: '', useWrapperFileDirectly: true])
             junit allowEmptyResults: true, keepProperties: true, testResults: 'trivy-image-HIGH-report.xml'
             junit allowEmptyResults: true, keepProperties: true, testResults: 'trivy-image-CRITICAL-report.xml'
+
+            publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: './', reportFiles: 'zap-report.html', reportName: 'DAST - ZAP Report', reportTitles: '', useWrapperFileDirectly: true])
+            junit allowEmptyResults: true, keepProperties: true, testResults: 'zap-report.xml'
         }
     }
 
