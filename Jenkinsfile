@@ -179,6 +179,11 @@ pipeline {
                branch 'PR*'
             }
             steps {
+                script {
+                    if(fileExists('solar-system-gitops-argocd')) {
+                        sh "rm -rf 'solar-system-gitops-argocd'"
+                    }
+                }
                 sh "git clone http://4.227.216.46:3000/my-organization/solar-system-gitops-argocd.git"
                 dir('solar-system-gitops-argocd/kubernetes') {
                     sh '''
@@ -266,12 +271,6 @@ pipeline {
 
     post {
         always {
-            script {
-                if(fileExists('solar-system-gitops-argocd')) {
-                    sh "rm -rf 'solar-system-gitops-argocd'"
-                }
-            }
-            
             junit allowEmptyResults: true, keepProperties: true, testResults: 'test-results.xml'
 
             publishHTML([allowMissing: true, alwaysLinkToLastBuild: true, icon: '', keepAll: true, reportDir: 'coverage/lcov-report', reportFiles: 'index.html', reportName: 'Code Coverage HTML Report', reportTitles: '', useWrapperFileDirectly: true])
