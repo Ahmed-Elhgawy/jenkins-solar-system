@@ -204,7 +204,7 @@ pipeline {
                     curl -X 'POST' \
                     'http://4.227.216.46:3000/api/v1/repos/my-organization/solar-system-gitops-argocd/pulls' \
                     -H 'accept: application/json' \
-                    -H 'X-GITEA-OTP: $GITEA_TOKEN' \
+                    -H 'Authorization: $GITEA_TOKEN' \
                     -H 'Content-Type: application/json' \
                     -d '{
                     "assignee": "git-admin",
