@@ -187,7 +187,7 @@ pipeline {
                         sed -i "s|elhgawy/solar-system-app:.*|elhgawy/solar-system-app:$GIT_COMMIT|g" deployment.yml
 
                         git config --global user.email "jenkins@my-organiztion"
-                        git remote set-url origin http://$GITEA_TOKEN@4.227.216.46/my-organization/solar-system-gitops-argocd.git
+                        git remote set-url origin http://$GITEA_TOKEN@4.227.216.46:3000/my-organization/solar-system-gitops-argocd.git
                         git add .
                         git commit -m "Update image tag"
                         git push -u origin feature/$BUILD_NUMBER
