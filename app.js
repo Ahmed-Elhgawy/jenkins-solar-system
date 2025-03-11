@@ -13,7 +13,9 @@ app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname, '/')));
 app.use(cors())
 
-mongoose.connect(process.env.MONGO_URI, {
+//  use solar-system
+//  db.createUser({user: "mongoadmin", pwd: "mongo-password", roles: [{ role: "readWrite", db: "config" },"clusterAdmin"]})
+mongoose.connect( process.env.MONGO_URI, {
     user: process.env.MONGO_USERNAME,
     pass: process.env.MONGO_PASSWORD,
     useNewUrlParser: true,
@@ -91,7 +93,7 @@ app.get('/ready',   function(req, res) {
     });
 })
 
-app.listen(3000, () => { console.log("Server successfully running on port - " +3000); })
+app.listen(5000, () => { console.log("Server successfully running on port - " +5000); })
 module.exports = app;
 
 //module.exports.handler = serverless(app)
