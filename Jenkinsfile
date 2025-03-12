@@ -297,6 +297,11 @@ pipeline {
                         ls -lta solar-system-lambda-$BUILD_NUMBER.zip
                     '''
                     s3Upload(file:"solar-system-lambda-${BUILD_NUMBER}.zip", bucket:'elhgawy-solar-system-lambda-bucket')
+                    sh """
+                        aws lambda update-function-configuration \
+                        --function-name solar-system-function \
+                        --environment '{"Variables": { "MONGO_URI": ${MONGO_URI}, "MONGO_USERNAME": "${MONGO_USERNAME}", "MONGO_PASSWORD": "${MONGO_PASSWORD}"}}'
+                    """
                     sh '''
                         aws lambda update-function-code \
                         --function-name solar-system-function \
