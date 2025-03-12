@@ -277,6 +277,27 @@ pipeline {
                 }
             }
         }
+        stage('lambda - S3 Upload and Deploy') {
+            when {
+               branch 'main'
+            }
+            steps {
+                withAWS(credentials: 'aws-jenkins-creds',region: 'us-east-1') {
+                    sh '''
+                        tail -5 app.js
+                        echo '*******************************************'
+                        sed -i "/^app\\.listen(5000/ s/^/\\/\\//" app.js
+                        sed -i "s/^module.exports = app;/\\/\\/module.exports = app;/g" app.js
+                        sed -i "s|^//module.exports.handler|module.exports.handler|" app.js
+                        echo '*******************************************'
+                        tail -5 app.js
+                    '''
+                    sh "zip -qr solar-system-lambda-$BUILD_NUMBER.zip app* package* node_modules/ index.html"
+                    s3Upload(file:"solar-system-lambda-$BUILD_NUMBER.zip", bucket:'elhgawy-solar-system-lambda-bucket')
+                    sh "aws lambda update-function-code --function-name solar-system-function --s3-bucket elhgawy-solar-system-lambda-bucket --s3-key solar-system-lambda-$BUILD_NUMBER.zip"
+                }
+            }
+        }
     }
 
     post {
