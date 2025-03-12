@@ -300,7 +300,7 @@ pipeline {
                     sh """
                         aws lambda update-function-configuration \
                         --function-name solar-system-function \
-                        --environment '{"Variables": { "MONGO_URI": ${MONGO_URI}, "MONGO_USERNAME": "${MONGO_USERNAME}", "MONGO_PASSWORD": "${MONGO_PASSWORD}"}}'
+                        --environment '{"Variables":{ "MONGO_URI": "${MONGO_URI}","MONGO_USERNAME": "${MONGO_USERNAME}","MONGO_PASSWORD": "${MONGO_PASSWORD}"}}'
                     """
                     sh '''
                         aws lambda update-function-code \
