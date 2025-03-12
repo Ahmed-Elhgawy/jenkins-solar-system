@@ -316,13 +316,15 @@ pipeline {
                 branch 'main'
             }
             steps {
-                sh '''
-                    sleep 30s
-                    function_arn=$(aws lambda get-function-url-config --function-name solar-system-function)
-                    function_url=$(echo $function_arn | jq -r '.FunctionUrl | sub("/$";"")')
+                withAWS(credentials: 'aws-jenkins-creds',region: 'us-east-1') {
+                    sh '''
+                        sleep 30s
+                        function_arn=$(aws lambda get-function-url-config --function-name solar-system-function)
+                        function_url=$(echo $function_arn | jq -r '.FunctionUrl | sub("/$";"")')
 
-                    curl -Is $function_url | grep -i "200 OK"
-                '''
+                        curl -Is $function_url | grep -i "200 OK"
+                    '''
+                }
             }
         }
     }
