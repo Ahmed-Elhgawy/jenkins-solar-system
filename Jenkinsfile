@@ -311,6 +311,20 @@ pipeline {
                 }
             }
         }
+        stage('lambda - Invoke Function') {
+            when {
+                branch 'main'
+            }
+            steps {
+                sh '''
+                    sleep 30s
+                    function_arn=$(aws lambda get-function-url-config --function-name solar-system-function)
+                    function_url=$(echo $function_arn | jq -r '.FunctionUrl | sub("/$";"")')
+
+                    curl -Is $function_url | grep -i "200 OK"
+                '''
+            }
+        }
     }
 
     post {
