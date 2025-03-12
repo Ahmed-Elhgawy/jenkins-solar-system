@@ -293,7 +293,9 @@ pipeline {
                         tail -5 app.js
                     '''
                     sh '''
+                        ls -lta
                         zip -qr solar-system-lambda-$BUILD_NUMBER.zip app* package* node* index.html
+                        ls -lta solar-system-lambda-$BUILD_NUMBER.zip
                     '''
                     s3Upload(file:"solar-system-lambda-$BUILD_NUMBER.zip", bucket:'elhgawy-solar-system-lambda-bucket')
                     sh '''
