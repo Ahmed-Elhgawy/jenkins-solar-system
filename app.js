@@ -42,19 +42,19 @@ var planetModel = mongoose.model('planets', dataSchema);
 
 
 
-app.post('/planet',   function(req, res) {
-   // console.log("Received Planet ID " + req.body.id)
-    planetModel.findOne({
-        id: req.body.id
-    }, function(err, planetData) {
-        if (err) {
-            alert("Ooops, We only have 9 planets and a sun. Select a number from 0 - 9")
-            res.send("Error in Planet Data")
-        } else {
-            res.send(planetData);
-        }
-    })
-})
+// app.post('/planet',   function(req, res) {
+//    // console.log("Received Planet ID " + req.body.id)
+//     planetModel.findOne({
+//         id: req.body.id
+//     }, function(err, planetData) {
+//         if (err) {
+//             alert("Ooops, We only have 9 planets and a sun. Select a number from 0 - 9")
+//             res.send("Error in Planet Data")
+//         } else {
+//             res.send(planetData);
+//         }
+//     })
+// })
 
 app.get('/',   async (req, res) => {
     res.sendFile(path.join(__dirname, '/', 'index.html'));
