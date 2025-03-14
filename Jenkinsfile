@@ -6,7 +6,7 @@ pipeline {
     }
 
     environment {
-        MONGO_URI = "mongodb://54.162.38.232"
+        MONGO_URI = "mongodb://change depend on the EC2 instance public IP"
         MONGO_USERNAME = credentials('mongodb-user')
         MONGO_PASSWORD = credentials('mongodb-secret')
         GITEA_TOKEN = credentials('gitea-api-token')
